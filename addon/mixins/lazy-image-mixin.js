@@ -2,11 +2,11 @@ import Ember from 'ember';
 import LazyImageLoader from '../utils/lazy-image-loader';
 
 /**
- * LazyImageViewMixin
- * Mixin for ImageViews to use a LazyImageLoader to manage when
+ * LazyImageMixin
+ * Mixin for Images to use a LazyImageLoader to manage when
  * they should load their src.
  */
-var LazyImageViewMixin = Ember.Mixin.create({
+var LazyImageMixin = Ember.Mixin.create({
   attributeBindings: ['url:data-src'],
   canLazyLoad: false,
 
@@ -43,18 +43,4 @@ var LazyImageViewMixin = Ember.Mixin.create({
   })
 });
 
-// Create a default LazyImageLoader.
-// To customize per application, create one and reopenClass on image views
-var defaultLazyLoader = new LazyImageLoader();
-Ember.ImageView.reopenClass({ lazyLoader: defaultLazyLoader });
-Ember.BackgroundImageView.reopenClass({ lazyLoader: defaultLazyLoader });
-
-// Apply the Mixin to ImageViews instances to make them lazy
-Ember.ImageView.reopen( LazyImageViewMixin );
-Ember.BackgroundImageView.reopen( LazyImageViewMixin, {
-  style: Ember.computed('url', 'canLazyLoad', function() {
-    if(this.get('canLazyLoad')) {
-      return this._super();
-    }
-  })
-});
+export default LazyImageMixin;
