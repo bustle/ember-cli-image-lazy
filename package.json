@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-image-lazy",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "An addon that builds on top of ember-cli-image to add lazy-loaded images support",
   "directories": {
     "doc": "doc",
     "test": "tests"
