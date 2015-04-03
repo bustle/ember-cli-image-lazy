@@ -1,46 +1,24 @@
 import Ember from 'ember';
-import LazyImageLoader from '../utils/lazy-image-loader';
+import InViewportMixin from './in-viewport';
 
 /**
- * LazyImageMixin
- * Mixin for Images to use a LazyImageLoader to manage when
- * they should load their src.
+ * A mixin for Ember image views to load them only 
+ * when they are scrolled into the viewport.
+ * @class LazyImageViewMixin
+ * @uses InViewportMixin
  */
-var LazyImageMixin = Ember.Mixin.create({
-  attributeBindings: ['url:data-src'],
-  canLazyLoad: false,
+export default Ember.Mixin.create( InViewportMixin, {
+  /**
+   * @override
+  */
+  loadImageOnInsert: null,
 
-  // Override these methods to queue if not in view
-  loadImageOnInsert: Ember.on('didInsertElement', function() {
-    Ember.run.scheduleOnce('afterRender', this, this._loadOrQueue);
-  }),
-
-  loadImageOnSrcChange: Ember.observer('url', function() {
-    this.set('canLazyLoad', false);
-    Ember.run.scheduleOnce('afterRender', this, this._loadOrQueue);
-  }),
-
-  _loadImageLazy: Ember.observer('canLazyLoad', function() {
-    if (this.get('canLazyLoad')) {
+  /**
+   * @private
+  */
+  _loadImageOnEnterView: Ember.observer('didEnterViewport', function() {
+    if (this.get('didEnterViewport')) {
       Ember.run.scheduleOnce('afterRender', this, this.loadImage);
-      this.constructor.lazyLoader.dequeueView(this);
-      this.get('element').removeAttribute('data-src');
     }
-  }),
-
-  _loadOrQueue: function() {
-    var lazyLoader = this.constructor.lazyLoader;
-    var isCurrentlyInView = lazyLoader.checkIfInView(this.get('element'));
-    if (isCurrentlyInView) {
-      this.set('canLazyLoad', true);
-    } else {
-      this.queueId = lazyLoader.queueView(this);
-    }
-  },
-
-  _dequeueOnDestroy: Ember.on('willDestroyElement', function() {
-    this.constructor.lazyLoader.dequeueView(this);
   })
 });
-
-export default LazyImageMixin;
