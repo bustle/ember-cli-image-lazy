@@ -22,7 +22,7 @@ InViewportManager.prototype.startObserving = function() {
     Ember.run.throttle(self, self.processQueue, self.throttle, false);
   }
   $(window).on('scroll.InViewportManager', throttledProcessor)
-                 .on('resize.InViewportManager', throttledProcessor);
+           .on('resize.InViewportManager', throttledProcessor);
   this.isObserving = true;
 };
 
